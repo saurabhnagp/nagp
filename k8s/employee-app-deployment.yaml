@@ -1,0 +1,60 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-app
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1           # Maximum extra pods during update
+      maxUnavailable: 0     # Maximum unavailable pods during update
+  selector:
+    matchLabels:
+      app: employee-app
+  template:
+    metadata:
+      labels:
+        app: employee-app
+    spec:
+      containers:
+        - name: employee-app
+          image: saurabhnagp/employee-app-image:v5
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: "Production"
+            - name: ASPNETCORE_URLS
+              value: "http://+:80"
+            - name: DbContextSettings__ConnectionString
+              valueFrom:
+                configMapKeyRef:
+                  name: employee-app-configmap
+                  key: DB_CONNECTIONSTRING
+            - name: Secrets__DBConnectionStringPassword
+              valueFrom:
+                secretKeyRef:
+                  name: employee-app-secret
+                  key: DB_PASSWORD
+          # resources:
+          #   requests:
+          #     cpu: 100m
+          #     memory: 128Mi
+          #   limits:
+          #     cpu: 200m
+          #     memory: 256Mi
+          # livenessProbe:
+          #   httpGet:
+          #     path: /health
+          #     port: 80
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     path: /ready
+          #     port: 80
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 5
+            

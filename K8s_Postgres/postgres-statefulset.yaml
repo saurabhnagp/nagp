@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:16-alpine
+        imagePullPolicy: "IfNotPresent"
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - |
+                sleep 20 && 
+                echo "Checking if seed data already exists..."
+                if ! PGPASSWORD=$POSTGRES_PASSWORD psql -w -d $POSTGRES_DB -U $POSTGRES_USER -c "SELECT COUNT(*) FROM \"Employee\";" 2>/dev/null | grep -q "[1-9]"; then
+                  echo "No seed data found. Creating table and inserting seed data..."
+                  PGPASSWORD=$POSTGRES_PASSWORD psql -w -d $POSTGRES_DB -U $POSTGRES_USER -c "
+                  CREATE TABLE IF NOT EXISTS \"Employee\" (id SERIAL PRIMARY KEY, name TEXT);
+                  INSERT INTO \"Employee\" (name) VALUES 
+                    ('Saurabh'), ('Rohit'), 
+                    ('Amit'), ('Neha'), ('Pooja'),
+                    ('Sweta'), ('Komal');"
+                  echo "Seed data inserted successfully."
+                else
+                  echo "Seed data already exists. Skipping insertion."
+                fi
+        envFrom:
+        - configMapRef:
+            name: postgres-configmap
+        - secretRef:
+            name: postgres-secret
+        ports:
+        - containerPort: 5432
+          name: postgresdb
+        volumeMounts:
+        - name: pv-data
+          mountPath: /var/lib/postgresql/data
+        # resources:
+          # requests:
+          #   memory: "256Mi"
+          #   cpu: "250m"
+          # limits:
+          #   memory: "512Mi"
+          #   cpu: "500m"
+      volumes:
+      - name: pv-data
+        persistentVolumeClaim:
+          claimName: postgres-volume-claim
+      

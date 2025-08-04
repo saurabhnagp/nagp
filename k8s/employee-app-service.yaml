@@ -1,0 +1,12 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: employee-app
+spec:
+  selector:
+    app: employee-app
+  ports:
+    - port: 49971
+      targetPort: 80
+  # type: NodePort
+  type: ClusterIP     # more secure than NodePort, because NodePort is exposed to the world, so it is more vulnerable to attacks

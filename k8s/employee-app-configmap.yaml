@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: employee-app-configmap
+  labels:
+    app: employee-app
+data:
+  DB_CONNECTIONSTRING: "Host=postgres-headless-service;Port=5432;Database=employeedb;Username=postgres;Pooling=true;"
+# data:
+#   DB_CONNECTIONSTRING: Server=postgres-headless-service.default.svc.cluster.local:5432;Database=employeedb;User Id=postgres; Pooling=true;

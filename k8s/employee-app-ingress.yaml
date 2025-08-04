@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: employee-app-ingress
+  annotations:
+    # nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "gce"          # Using GKE's built-in controller, so i don't need to install nginx-ingress-controller
+spec:
+  # ingressClassName: nginx
+  rules:
+  # - host: employee-app.local   # i don't have actual domain name, so i am using local domain name by updating my hosts file
+  - http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: employee-app
+            port:
+              number: 49971
