@@ -1,13 +1,16 @@
 # EmployeeApp - Kubernetes Microservice with PostgreSQL
 
-Github Url
-https://github.com/saurabhkaushik120692/nagp/
+## Github Url
+https://github.com/saurabhnagp/nagp/
 
-Employee Service
-Web Api build in dotnet core 8
-Docker hub image url: https://hub.docker.com/r/saurabhnagp/employee-app-image/tags
-Docker image("employee-app-image") and tag("v5")
-Application Ingress URL: http://34.107.251.8/swagger/index.html
+## Docker hub image url:
+https://hub.docker.com/r/saurabhnagp/employee-app-image/tags
+
+### Docker image("employee-app-image") and tag("v5")
+
+### Employee Service web api build in dotnet core 8
+
+### Application Ingress URL: http://34.107.251.8/swagger/index.html
 
 
 A production-ready, containerized microservice application demonstrating Kubernetes best practices, deployed on Google Cloud Platform (GCP) with PostgreSQL database.
@@ -542,3 +545,4 @@ For issues and questions:
 ---
 
 **Happy Deploying! 🚀** 
+
